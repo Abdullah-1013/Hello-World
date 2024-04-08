@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User's Form</title>
+<style>
+    #todo-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .todo-item {
+        margin-bottom: 5px;
+    }
+    .todo-item:hover .actions {
+        display: inline;
+    }
+    .actions {
+        display: none;
+    }
+</style>
+</head>
+<body>
+<h2>User's Form</h2>
+<form id="todo-form">
+    <input type="text" id="name-input" placeholder="Enter a new name" required>
+    <br><br>
+    <input type="number" id="age-input" placeholder="Enter your age" required>
+    <br><br>
+    <input type="email" id="email-input" placeholder="Enter your email" required>
+    <br><br>
+    <button type="submit">Add</button>
+</form>
+<ul id="todo-list">
+    <!-- To-Do items will be added here dynamically -->
+</ul>
+<script>
+    document.getElementById('todo-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var nameInput = document.getElementById('name-input');
+        var name = nameInput.value.trim();
+        var ageInput = document.getElementById('age-input');
+        var age = ageInput.value.trim();
+        var emailInput = document.getElementById('email-input');
+        var email = emailInput.value.trim();
+        if (name !== '' && age !== '' && email !== '') {
+            addTodoItem(name, age, email);
+            nameInput.value = '';
+            ageInput.value = '';
+            emailInput.value = '';
+            saveTodoList();
+        }
+    });
+
+    function addTodoItem(name, age, email) {
+        var todoList = document.getElementById('todo-list');
+        var listItem = document.createElement('li');
+        listItem.classList.add('todo-item');
+        listItem.innerHTML = `
+            <span>Name: <span id="name">${name}</span></span>
+            <span>Age: <span id="age">${age}</span></span>
+            <span>Email: <span id="email">${email}</span></span>
+            <span class="actions">
+                <button onclick="updateName(this)">Update Name</button>
+                <button onclick="updateAge(this)">Update Age</button>
+                <button onclick="updateEmail(this)">Update Email</button>
+                <button onclick="deleteTodoItem(this)">Delete</button>
+            </span>`;
+        todoList.appendChild(listItem);
+    }
+
+    function updateName(button) {
+        var nameSpan = button.closest('.todo-item').querySelector('#name');
+        var newName = prompt('Enter the updated name:');
+        if (newName !== null && newName.trim() !== '') {
+            nameSpan.textContent = newName;
+            saveTodoList();
+        }
+    }
+
+    function updateAge(button) {
+        var ageSpan = button.closest('.todo-item').querySelector('#age');
+        var newAge = prompt('Enter the updated age:');
+        if (newAge !== null && newAge.trim() !== '') {
+            ageSpan.textContent = newAge;
+            saveTodoList();
+        }
+    }
+
+    function updateEmail(button) {
+        var emailSpan = button.closest('.todo-item').querySelector('#email');
+        var newEmail = prompt('Enter the updated email:');
+        if (newEmail !== null && newEmail.trim() !== '') {
+            emailSpan.textContent = newEmail;
+            saveTodoList();
+        }
+    }
+
+    function deleteTodoItem(button) {
+        var todoItem = button.closest('.todo-item');
+        todoItem.remove();
+        saveTodoList();
+    }
+
+    function saveTodoList() {
+        var todoList = document.getElementById('todo-list').innerHTML;
+        localStorage.setItem('todoList', todoList);
+    }
+
+    function loadTodoList() {
+        var savedTodoList = localStorage.getItem('todoList');
+        if (savedTodoList) {
+            document.getElementById('todo-list').innerHTML = savedTodoList;
+        }
+    }
+
+    // Load the stored todo list when the page loads
+    window.onload = loadTodoList;
+</script>
+</body>
+</html>

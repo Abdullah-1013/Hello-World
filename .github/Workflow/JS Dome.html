@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>detect browser or tab closing</title>
+</head>
+<body>
+    <form>
+        <textarea placeholder="What is your name?"></textarea>
+    </form>
+    <script>
+        window.addEventListener('beforeunload', function (e) {
+            // Check if the event is not a reload
+            if (!e.isReloading) {
+                e.preventDefault();
+                e.returnValue = 'Close Window';
+            }
+        });
+    </script>
+</body>
+</html>
